@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankWeb - 安全银行</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind 按需主题配置（银行主题：蓝色 + 强对比）
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pharmacy: {
+                            primary: '#0f59a4', //蓝色-500
+                            primaryDark: '#003d86', // 蓝色-600
+                            accent: '#f97316', // 橙色-500
+                            bg: '#f8fafc' // slate-50
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
