@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.4.7-oraclelinux9
+    container_name: mysql84
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456  # 设置root用户的密码
+    volumes:
+      - mysql_data:/var/lib/mysql  # 使用命名卷进行数据持久化
+    ports:
+      - "3307:3306"  # 将宿主机的3307端口映射到容器内的3306端口
+    restart: unless-stopped  # 在容器退出时自动重启，除非手动停止
+
+volumes:
+  mysql_data:  # 声明一个名为mysql_data的数据卷

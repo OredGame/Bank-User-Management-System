@@ -1,0 +1,16 @@
+package com.dxr.bankusermanagement.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dxr.bankusermanagement.entity.User;
+
+/**
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author dxr
+ * @since 2025-11-20 
+ */
+public interface UserMapper extends BaseMapper<User> {
+
+}
