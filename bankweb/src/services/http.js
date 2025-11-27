@@ -6,11 +6,10 @@ import axios from 'axios'
 // ===============================
 
 const http = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+    baseURL:  "http://localhost:8080/",
     timeout: 15000
 })
 
-// 可按需添加请求/响应拦截器；当前无 Token，不做额外头部处理
 http.interceptors.request.use((config) => config, (error) => Promise.reject(error))
 http.interceptors.response.use((response) => response, (error) => Promise.reject(error))
 

@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author DXR
- * @date 2025/11/21 19:52
+ * @date 2025/11/24 17:30
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+public class ResetPasswordDTO {
     @NotBlank(message = "用户名不能为空")
     private String username;
     @NotBlank(message = "手机号不能为空")

@@ -1,13 +1,18 @@
 <script setup>
-import {  ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { login } from '../services/auth'
 
 const router = useRouter()
-const route = useRoute()
-
+onMounted(() => {
+  const savedId = localStorage.getItem('Id')
+  if (savedId) {
+    // 已登录，直接跳转到 info 页面
+    router.replace('/info')
+  }
+})
 const form = ref({
-  account: '',
+  username: '',
   password: '',
   remember: false
 })
@@ -17,7 +22,7 @@ const errorMsg = ref('')
 
 function validate() {
   errorMsg.value = ''
-  if (!form.value.account.trim()) {
+  if (!form.value.username.trim()) {
     errorMsg.value = '请输入账号'
     return false
   }
@@ -27,26 +32,23 @@ function validate() {
   }
   return true
 }
-
 async function onSubmit() {
   if (!validate()) return
   loading.value = true
   try {
-    // ==============================================
-    // 【前后端通讯：发起登录请求】
-    // 说明：向后端 POST /auth/login 发送账号与密码
-    // 返回成功后保存 token（若后端为 Cookie 会话可省略）
-    // ==============================================
-    const { data } = await login({ account: form.value.account, password: form.value.password })
-    // 当前不使用 JWT：不保存 token，依赖后端会话或返回状态
-    const redirect = (route.query.redirect || '/home')
-    await router.replace(redirect)
+
+   const {data} = await login({ username: form.value.username, password: form.value.password})
+    // 注册成功：跳转登录页
+    await router.replace('/info')
+    localStorage.setItem('Id', data.id)
   } catch (err) {
-    // 统一错误提示
-    errorMsg.value = err?.response?.data?.message || '登录失败，请检查账号或密码'
+    errorMsg.value = err.message || '登录失败，请稍后再试'
   } finally {
     loading.value = false
   }
+
+
+
 }
 </script>
 
@@ -65,7 +67,7 @@ async function onSubmit() {
         <form @submit.prevent="onSubmit" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">账号</label>
-            <input v-model="form.account" type="text" placeholder="请输入账号"
+            <input v-model="form.username" type="text" placeholder="请输入账号"
                    class="w-full rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 py-2 outline-none transition" />
           </div>
 
@@ -80,7 +82,9 @@ async function onSubmit() {
               <input v-model="form.remember" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500" />
               <span class="text-sm text-gray-600">记住我</span>
             </label>
-            <a href="#" class="text-sm text-orange-600 hover:underline">忘记密码？</a>
+            <router-link to="/forgot" class="text-sm text-orange-600 hover:underline">
+              忘记密码？
+            </router-link>
           </div>
 
           <button type="submit" :disabled="loading" class="w-full py-3 rounded-lg font-semibold text-white bg-pharmacy-primary hover:bg-pharmacy-primaryDark disabled:opacity-60 disabled:cursor-not-allowed transition shadow">

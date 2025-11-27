@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { register } from '../services/auth'
+import {forgot, register} from '../services/auth'
 
 const router = useRouter()
 
@@ -51,14 +51,14 @@ async function onSubmit() {
   loading.value = true
   try {
     // ==============================================
-    // 【前后端通讯：发起注册请求】
-    // 说明：向后端 POST /auth/register 提交账号与密码
+    // 【前后端通讯：发起重置密码请求】
+    // 说明：向后端 POST user/register 提交账号与密码
     // ==============================================
-    await register({ username: form.value.username, password: form.value.password,confirmPassword: form.value.confirmPassword ,phone: form.value.phone})
-    // 注册成功：跳转登录页
+    await forgot({ username: form.value.username, password: form.value.password,confirmPassword: form.value.confirmPassword,phone: form.value.phone })
+    // 重置成功：跳转登录页
     await router.replace('/login')
   } catch (err) {
-    errorMsg.value = err.message || '注册失败，请稍后再试'
+    errorMsg.value = err.message || '重置失败，请稍后再试'
   } finally {
     loading.value = false
   }
@@ -72,8 +72,7 @@ async function onSubmit() {
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pharmacy-primary shadow">
           <span class="text-white text-2xl font-extrabold">H</span>
         </div>
-        <h1 class="mt-4 text-3xl font-extrabold text-gray-800">用户注册</h1>
-        <p class="text-gray-500">创建你的安全银行账号</p>
+        <h1 class="mt-4 text-3xl font-extrabold text-gray-800">重置密码</h1>
       </div>
 
       <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -85,8 +84,8 @@ async function onSubmit() {
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
-            <input v-model="form.password" type="password" placeholder="请输入密码（至少6位）"
+            <label class="block text-sm font-medium text-gray-700 mb-1">新密码</label>
+            <input v-model="form.password" type="password" placeholder="请输入新密码（至少6位）"
                    class="w-full rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 py-2 outline-none transition" />
           </div>
 
@@ -101,7 +100,7 @@ async function onSubmit() {
                    class="w-full rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 py-2 outline-none transition" />
           </div>
           <button type="submit" :disabled="loading" class="w-full py-3 rounded-lg font-semibold text-white bg-pharmacy-primary hover:bg-pharmacy-primaryDark disabled:opacity-60 disabled:cursor-not-allowed transition shadow">
-            {{ loading ? '注册中...' : '注册' }}
+            {{ loading ? '重置中...' : '重置密码' }}
           </button>
 
           <p v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</p>

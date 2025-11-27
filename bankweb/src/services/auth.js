@@ -7,28 +7,42 @@ import http from './http'
 
 /**
  * 登录
- * @param {{account: string, password: string}} payload
+ * @param {{username: string, password: string}} payload
  * @returns {Promise<any>}
  */
 export function login(payload) {
-    // 醒目：向后端发起登录请求（无 JWT 处理）
-    return http.post('/auth/login', payload)
-}
+    return http.post('/user/login', payload).then(response => {
+        const {code, message, data} = response.data
 
-/**
- * 退出登录
- * @returns {Promise<any>}
- */
-export function logout() {
-    return http.post('/auth/logout')
+        if (code === 200) {
+            console.log('登录成功：', data)
+            return {data, message}
+
+        } else {
+            // 失败：抛出错误，携带 message
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error
+        }
+    })
 }
 
 /**
  * 获取当前用户信息
  * @returns {Promise<any>}
  */
-export function fetchMe() {
-    return http.get('/auth/me')
+export function fetchUserById(id) {
+    return http.get(`/user/${id}`).then(response => {
+        const { code, message, data } = response.data
+
+        if (code === 200) {
+            return { data, message }
+        } else {
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error
+        }
+    })
 }
 
 /**
@@ -37,8 +51,59 @@ export function fetchMe() {
  * @returns {Promise<any>}
  */
 export function register(payload) {
-    // 【前后端通讯：注册请求】
-    return http.post('/auth/register', payload)
+    return http.post('/user/register', payload).then(response => {
+        const {code, message, data} = response.data // 👈 解构后端返回的统一结构
+
+        if (code === 200) {
+            // 成功：直接返回 user 数据（或整个 data）
+            return {data, message} // 或 return { user: data, message }
+        } else {
+            // 失败：抛出错误，携带 message
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error // 👈 这样调用处 catch 能捕获到 message
+        }
+    })
 }
 
+export function forgot(payload) {
+    return http.patch('/user/passwordreset', payload).then(response => {
+        const {code, message, data} = response.data // 👈 解构后端返回的统一结构
 
+        if (code === 200) {
+            // 成功：直接返回 user 数据（或整个 data）
+            return {data, message} // 或 return { user: data, message }
+        } else {
+            // 失败：抛出错误，携带 message
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error // 👈 这样调用处 catch 能捕获到 message
+        }
+    })
+}
+
+export function identify(id,payload) {
+    return http.patch(`/user/${id}/identification`,payload).then(response => {
+        const { code, message, data } = response.data
+        if (code === 200) {
+            return { data, message }
+        } else {
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error
+        }
+    })
+}
+
+export function contactInfoChange(id,payload) {
+    return http.patch(`/user/${id}/contact-info`,payload).then(response => {
+        const { code, message, data } = response.data
+        if (code === 200) {
+            return { data, message }
+        } else {
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error
+        }
+    })
+}

@@ -43,7 +43,7 @@ public class User implements Serializable {
     /**
      * 密码
      */
-    @TableField("password")
+    @TableField(value = "password", select = false)
     private String password;
 
     /**
