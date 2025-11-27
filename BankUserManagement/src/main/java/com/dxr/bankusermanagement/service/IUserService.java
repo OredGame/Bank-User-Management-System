@@ -26,4 +26,6 @@ public interface IUserService extends IService<User> {
     Response<User> identifyUser(Long id, IdentificationDTO identificationDTO);
 
     Response<User> updateContactInfo(Long id, @Valid ContactInfoDTO contactInfoDTO);
+
+    Response<User> deleteUser(Long id);
 }

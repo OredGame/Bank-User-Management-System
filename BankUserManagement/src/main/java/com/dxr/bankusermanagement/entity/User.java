@@ -1,10 +1,6 @@
 package com.dxr.bankusermanagement.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -73,6 +69,7 @@ public class User implements Serializable {
     /**
      * 逻辑删除标志：0-未删，1-已删
      */
+    @TableLogic
     @TableField("is_deleted")
     private Byte isDeleted;
 

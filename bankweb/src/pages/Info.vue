@@ -8,6 +8,7 @@
           <li class="active">用户信息</li>
         </ul>
       </div>
+      <button class="account-close-btn" @click="handleAccountDeletion">销户</button>
       <button class="logout-btn" @click="handleLogout">登出</button>
     </nav>
 
@@ -117,7 +118,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { contactInfoChange, fetchUserById, identify } from "@/services/auth.js"
+import {contactInfoChange, deleteUser, fetchUserById, identify} from "@/services/auth.js"
 
 const router = useRouter()
 
@@ -255,7 +256,7 @@ const handleLogout = () => {
 const fetchUserInfo = async () => {
   const id = getUserId()
   if (!id) {
-    router.replace('/login')
+    await router.replace('/login')
     return
   }
 
@@ -270,10 +271,31 @@ const fetchUserInfo = async () => {
   } catch (err) {
     showToast('获取用户信息失败', 'error')
     localStorage.removeItem('Id')
-    router.replace('/login')
+    await router.replace('/login')
   }
 }
+// 销户（注销账户）
+const handleAccountDeletion = async () => {
+  const confirmed = confirm('⚠️ 确定要销户吗？\n此操作不可逆，账户及所有数据将被永久删除。')
+  if (!confirmed) return
 
+  const currentId = getUserId()
+  if (!currentId) {
+    showToast('用户未登录', 'error')
+    await router.replace('/login')
+    return
+  }
+
+  try {
+    await deleteUser(currentId)
+    showToast('账户已成功销户', 'success')
+    localStorage.removeItem('Id')
+    await router.replace('/login')
+  } catch (err) {
+    console.error('销户失败:', err)
+    showToast('销户失败，请稍后重试', 'error')
+  }
+}
 // 组件挂载时加载数据
 onMounted(() => {
   fetchUserInfo()
@@ -501,5 +523,21 @@ onMounted(() => {
   10% { opacity: 1; transform: translateX(-50%) translateY(0); }
   90% { opacity: 1; transform: translateX(-50%) translateY(0); }
   100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+}
+.account-close-btn {
+  width: calc(100% - 40px);
+  margin: 0 20px 10px; /* 下边距10px，和登出按钮分开 */
+  padding: 10px;
+  background-color: #8e44ad; /* 紫色，区别于红色登出 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.account-close-btn:hover {
+  background-color: #7d3c98;
 }
 </style>

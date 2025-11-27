@@ -107,3 +107,17 @@ export function contactInfoChange(id,payload) {
         }
     })
 }
+
+// 销户接口（DELETE /user/{id}）
+export function deleteUser(id) {
+    return http.delete(`/user/${id}`).then(response => {
+        const { code, message, data } = response.data
+        if (code === 200) {
+            return { data, message }
+        } else {
+            const error = new Error(message || '请求失败')
+            error.code = code
+            throw error
+        }
+    })
+}

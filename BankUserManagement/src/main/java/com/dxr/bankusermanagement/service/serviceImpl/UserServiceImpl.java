@@ -150,4 +150,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userMapper.updateById(user);
         return Response.success(user);
     }
+
+    @Override
+    public Response<User> deleteUser(Long id) {
+        // selectById 会自动排除 is_deleted=1 的记录
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new BusinessException(500, "用户不存在或已注销！");
+        }
+
+        userMapper.deleteById(id);
+
+        return Response.success(user);
+    }
 }

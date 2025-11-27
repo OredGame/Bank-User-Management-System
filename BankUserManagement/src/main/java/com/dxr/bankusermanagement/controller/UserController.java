@@ -56,5 +56,11 @@ public class UserController {
             @Valid @RequestBody ContactInfoDTO contactInfoDTO) {
         return userService.updateContactInfo(id, contactInfoDTO);
     }
+
+
+    @DeleteMapping("/{id}")
+    public Response<User> deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
 }
 
